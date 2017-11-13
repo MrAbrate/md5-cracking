@@ -1,0 +1,113 @@
+<style>
+  body {
+    margin:0;
+    font-family: monospace;
+  }
+  #timer {
+    font-size: 36px;
+    text-align: center;
+    padding-top: 60px;
+    padding-bottom: 60px;
+  }
+  #deactivation-code {
+    display: flex;
+    flex-flow: column nowrap;
+    align-items: center;
+    text-align: center;
+    padding-top: 30px;
+    padding-bottom: 30px;
+  }
+  #deactivation-code > label,
+  #deactivation-code > input,
+  #deactivation-code > button {
+    width: 200px;
+    margin-top: 5px;
+    margin-bottom: 5px;
+  }
+  #code-submit {
+    background: crimson;
+    color: white;
+    padding: 10px 6px;
+    font-size: 20px;
+  }
+  #code-input {
+    text-align: center;
+    font-size: 20px;
+  }
+</style>
+
+
+
+<div id="timer"></div>
+
+<div id="deactivation-code">
+  <h2><label for="deactivation-code">Deactivation Code</label></h2>
+  <input type="text" id="code-input">
+  <button id="code-submit">Submit</button>
+</div>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/blueimp-md5/2.10.0/js/md5.min.js"></script>
+<script>
+  var timer = document.getElementById('timer');
+  var deactivationDiv = document.getElementById('deactivation-code');
+  var submit = document.getElementById('code-submit');
+  var input = document.getElementById('code-input');
+
+  var countingDown = true;
+
+  var pwd = "4b3a6218bb3e3a7303e8a171a60fcf92";
+  var now = new Date().getTime();
+  var timeGoals = [
+    new Date("Nov 29, 2017 9:35:00").getTime()
+  ];
+
+  timeGoals.filter(d => d > now);
+  var next = timeGoals[0];
+  displayTime();
+
+  function displayTime() {
+
+    var now = new Date().getTime();
+    if (now > next) {
+      // AI Takes Over
+    }
+    var dif = next - now;
+
+    var hrs = Math.floor(dif / 1000 / 60/ 60);
+    dif -= hrs * 1000 * 60 * 60;
+
+    var min = Math.floor(dif / 1000 / 60);
+    dif -= min * 1000 * 60;
+
+    var sec = Math.floor(dif / 1000);
+    timer.innerHTML = hrs + ":" + min + ":" + sec;
+
+
+    if (countingDown) {
+      if (min < 10) {
+        timer.style.backgroundColor = "yellow";
+      } else if (min < 5) {
+        timer.style.backgroundColor = "crimson";
+      } else {
+        timer.style.backgroundColor = "#ddd";
+      }
+
+      setTimeout(displayTime, 1000);
+    } else {
+      timer.style.backgroundColor = "green";
+    }
+  }
+
+  submit.addEventListener('click', submitDeactivationCode);
+
+  function submitDeactivationCode() {
+    if (md5(input.value) === pwd) {
+      console.log("unlocked");
+      countingDown = false;
+
+      deactivationDiv.children.forEach(child => child.style.display = 'none');
+    }
+  }
+
+</script>
